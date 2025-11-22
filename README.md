@@ -14,6 +14,11 @@ We just launched **Murf Falcon** – the consistently fastest TTS API, and you'r
 - Build a voice agent with specific personas and skills
 - Post on GitHub and share with the world on LinkedIn!
 
+## Challenge Progress
+
+- Day 1: ✅ Get Your Starter Voice Agent Running - COMPLETED
+- Day 2: ✅ Day2 Completed – Coffee Shop Barista Agent ☕🗣️
+
 ## Repository Structure
 
 This is a **monorepo** that contains both the backend and frontend for building voice agent applications. It's designed to be your starting point for each day's challenge task.
@@ -212,3 +217,38 @@ Good luck with the challenge!
 ---
 
 Built for the AI Voice Agents Challenge by murf.ai
+
+# Day 2 – Coffee Shop Barista Agent
+For Day 2, your primary objective is to turn the starter agent into a coffee shop barista that can take voice orders and show a neat text summary.
+
+Primary Goal (Required)
+Persona: Turn the agent into a friendly barista for a coffee brand of your choice.
+Order state: Maintain a small order state object:
+{
+  "drinkType": "string",
+  "size": "string",
+  "milk": "string",
+  "extras": ["string"],
+  "name": "string"
+}
+Behavior:
+The agent should ask clarifying questions until all fields in the order state are filled.
+Once the order is complete, save the order to a JSON file summarizing the order.
+Resources:
+https://docs.livekit.io/agents/build/tools/
+https://docs.livekit.io/agents/build/agents-handoffs/#passing-state
+https://docs.livekit.io/agents/build/tasks/
+https://github.com/livekit/agents/blob/main/examples/drive-thru/agent.py
+Completing the above is enough to finish Day 2.
+
+Advanced Challenge (Optional)
+This part is completely optional and only for participants who want an extra challenge:
+
+Build an HTML-based beverage image generation system.
+The rendered HTML “drink image” should change according to the order. For example:
+If the order is small, show a small cup; if large, show a larger cup.
+If the drink has whipped cream, visualize it with a simple HTML shape on top of the cup.
+Instead of the beverage image, you can also render an HTML order receipt.
+Resources:
+https://docs.livekit.io/home/client/data/text-streams/
+https://docs.livekit.io/home/client/data/rpc/

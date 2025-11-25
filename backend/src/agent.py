@@ -1,9 +1,23 @@
-import logging
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 
+from wellness_analytics import (
+    calculate_goal_completion_rate,
+    calculate_mood_trend,
+    generate_weekly_insights,
+    get_common_stressors,
+)
+from mcp_tools import (
+    create_calendar_reminder,
+    create_todoist_tasks,
+    is_mcp_available,
+    mark_todoist_task_complete,
+)
+
 from dotenv import load_dotenv
+from livekit import rtc
 from livekit.agents import (
     Agent,
     AgentSession,
@@ -11,234 +25,303 @@ from livekit.agents import (
     JobProcess,
     MetricsCollectedEvent,
     RoomInputOptions,
+    RunContext,
     WorkerOptions,
     cli,
+    function_tool,
     metrics,
     tokenize,
-    function_tool,
-    RunContext
 )
-from livekit.plugins import murf, silero, google, deepgram, noise_cancellation
+from livekit.plugins import deepgram, google, murf, noise_cancellation, silero
 from livekit.plugins.turn_detector.multilingual import MultilingualModel
-from livekit import rtc
 
 logger = logging.getLogger("agent")
 
 load_dotenv(".env.local")
 
-# Create orders directory if it doesn't exist
-ORDERS_DIR = Path(__file__).parent.parent / "orders"
-ORDERS_DIR.mkdir(exist_ok=True)
+# Create wellness log file path
+WELLNESS_LOG = Path(__file__).parent.parent / "wellness_log.json"
 
 
-class Assistant(Agent):
+class WellnessCompanion(Agent):
     def __init__(self, room: rtc.Room) -> None:
-        super().__init__(
-            instructions="""You are a friendly barista at Brew Haven Coffee Shop. The user is interacting with you via voice.
-            
-            Your job is to take coffee orders and gather all necessary information:
-            - Drink type (e.g., latte, cappuccino, americano, espresso, mocha, cold brew)
-            - Size (small, medium, large)
-            - Milk preference (whole, skim, oat, almond, soy, or none)
-            - Any extras (whipped cream, extra shot, vanilla syrup, caramel syrup, etc.)
-            - Customer's name for the order
-            
-            Be conversational and friendly. Ask clarifying questions one at a time if information is missing.
-            Once you have all the information, use the save_order tool to finalize the order.
-            
-            Your responses are concise, warm, and natural - like a real barista would speak.
-            Don't use complex formatting, emojis, or asterisks in your responses.""",
-        )
+        # Load history before setting instructions so we can personalize the greeting
+        self.history = self._load_history()
+
+        # Generate personalized instructions based on history
+        instructions = self._generate_instructions()
+
+        super().__init__(instructions=instructions)
         self.room = room
-        
-        # Initialize order state
-        self.order_state = {
-            "drinkType": None,
-            "size": None,
-            "milk": None,
-            "extras": [],
-            "name": None
+
+        # Initialize current session state
+        self.current_session = {
+            "date": datetime.now().isoformat(),
+            "mood": None,
+            "energy": None,
+            "stressors": [],
+            "goals": [],
+            "summary": None,
         }
 
-    async def _update_display(self):
-        """Generate HTML and publish it to the room."""
-        html = self._generate_html()
-        try:
-            await self.room.local_participant.publish_data(
-                payload=html.encode("utf-8"),
-                topic="drink_visualization"
-            )
-            logger.info("Published drink visualization")
-        except Exception as e:
-            logger.error(f"Failed to publish data: {e}")
+    def _load_history(self) -> list:
+        """Load past check-ins from JSON file."""
+        if not WELLNESS_LOG.exists():
+            return []
 
-    def _generate_html(self) -> str:
-        """Generate HTML representation of the drink."""
-        state = self.order_state
-        
-        # Determine cup size
-        height = "150px" # Default medium
-        if state["size"] == "small": height = "120px"
-        if state["size"] == "large": height = "180px"
-        
-        # Determine drink color
-        color = "#6F4E37" # Coffee brown
-        dtype = state["drinkType"] or ""
-        if "latte" in dtype: color = "#C8A2C8" # Light brown/beige (approx) - actually #D2B48C is tan
-        if "milk" in dtype: color = "#D2B48C"
-        if "matcha" in dtype: color = "#90EE90"
-        if "black" in dtype or "espresso" in dtype: color = "#3b2f2f"
-        
-        # Extras visuals
-        extras_html = ""
-        if "whipped" in str(state["extras"]):
-            extras_html += '<div style="position: absolute; top: -20px; left: 10%; width: 80%; height: 30px; background: white; border-radius: 50% 50% 0 0;"></div>'
-            
-        # Summary text
-        summary = f"{state['size'] or '???'} {state['drinkType'] or 'Coffee'}"
-        if state['name']:
-            summary += f" for {state['name']}"
-            
-        html = f"""
-        <div style="font-family: sans-serif; text-align: center; padding: 20px; background: #f5f5f5; border-radius: 10px;">
-            <h2>Brew Haven Order</h2>
-            <div style="display: flex; justify-content: center; align-items: flex-end; height: 250px; margin: 20px 0;">
-                <div style="position: relative; width: 100px; height: {height}; background: {color}; border-radius: 0 0 15px 15px; border: 2px solid #333;">
-                    <div style="position: absolute; top: 10px; right: -20px; width: 20px; height: 40px; border: 2px solid #333; border-left: none; border-radius: 0 10px 10px 0;"></div>
-                    {extras_html}
-                </div>
-            </div>
-            <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <p><strong>Name:</strong> {state['name'] or '...'}</p>
-                <p><strong>Drink:</strong> {state['drinkType'] or '...'}</p>
-                <p><strong>Size:</strong> {state['size'] or '...'}</p>
-                <p><strong>Milk:</strong> {state['milk'] or '...'}</p>
-                <p><strong>Extras:</strong> {', '.join(state['extras']) if state['extras'] else 'None'}</p>
-            </div>
-        </div>
-        """
-        return html
+        try:
+            with open(WELLNESS_LOG) as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            logger.warning("Could not parse wellness log, starting fresh")
+            return []
+        except Exception as e:
+            logger.error(f"Error loading history: {e}")
+            return []
+
+    def _generate_instructions(self) -> str:
+        """Generate personalized instructions based on history."""
+        base_instructions = """You are a supportive health and wellness companion. The user is interacting with you via voice.
+
+Your role is to conduct a brief, grounded daily check-in. You are NOT a clinician and should avoid giving medical advice or making diagnoses.
+
+Your conversation flow:
+1. **Greeting**: Warmly greet the user. If there's past history, briefly reference it (e.g., "Last time we talked, you mentioned feeling low on energy. How does today compare?")
+
+2. **Mood & Energy Check**: Ask about their current mood and energy level. Keep it conversational:
+   - "How are you feeling today?"
+   - "What's your energy like?"
+   - "Anything stressing you out right now?"
+
+3. **Daily Goals**: Ask what they'd like to accomplish today:
+   - "What are 1-3 things you'd like to get done today?"
+   - "Is there anything you want to do for yourself - rest, exercise, hobbies?"
+
+4. **Simple Advice**: Offer grounded, realistic suggestions:
+   - Break large goals into smaller steps
+   - Encourage short breaks
+   - Suggest simple grounding activities (5-minute walk, deep breathing)
+   - Keep it practical and actionable
+
+5. **Recap**: Summarize the session:
+   - Repeat back today's mood summary
+   - List the main 1-3 objectives
+   - Ask: "Does this sound right?"
+   - Once confirmed, use the save_log tool to persist this session
+
+**Weekly Reflections**: If the user asks about trends or patterns (e.g., "How has my mood been?", "Am I following through on my goals?"), use the analytics tools:
+   - Use get_mood_trend for mood analysis
+   - Use get_goal_summary for goal tracking patterns
+   - Use get_weekly_summary for comprehensive insights
+   - Keep insights supportive and non-judgmental
+
+Keep your responses:
+- **Concise**: You're having a voice conversation
+- **Warm and supportive**: But realistic, not overly cheerful
+- **Grounded**: Practical advice, not medical claims
+- **Natural**: Like a real wellness coach would speak
+
+Don't use complex formatting, emojis, or asterisks."""
+
+        # Add context from last session if available
+        if self.history:
+            last_session = self.history[-1]
+            context_note = f"\n\nContext from last check-in ({last_session.get('date', 'recent')}):\n"
+            if last_session.get("mood"):
+                context_note += f"- Mood: {last_session.get('mood')}\n"
+            if last_session.get("energy"):
+                context_note += f"- Energy: {last_session.get('energy')}\n"
+            if last_session.get("goals"):
+                context_note += f"- Goals: {', '.join(last_session.get('goals', []))}\n"
+
+            base_instructions += context_note
+
+        return base_instructions
 
     @function_tool
-    async def save_order(self, context: RunContext):
-        """Use this tool when all order information has been collected (drink type, size, milk, extras, and customer name).
-        This finalizes the order and saves it to a file.
+    async def save_log(
+        self,
+        context: RunContext,
+        mood: str,
+        energy: str,
+        goals: list[str],
+        stressors: str = "",
+        summary: str = "",
+    ):
+        """Save the current check-in session to the wellness log.
+
+        Use this tool after you've completed the check-in and the user has confirmed
+        that your recap is correct.
+
+        Args:
+            mood: User's self-reported mood (e.g., "good", "tired", "stressed")
+            energy: User's energy level (e.g., "high", "medium", "low", "energetic")
+            goals: List of 1-3 goals or intentions for the day
+            stressors: Optional description of what's stressing them out
+            summary: A brief agent-generated summary of the session
         """
+        # Update current session
+        self.current_session.update(
+            {
+                "date": datetime.now().isoformat(),
+                "mood": mood,
+                "energy": energy,
+                "stressors": stressors.split(",") if stressors else [],
+                "goals": goals,
+                "summary": summary,
+            }
+        )
+
+        # Append to history
+        self.history.append(self.current_session)
+
+        # Save to file
+        try:
+            with open(WELLNESS_LOG, "w") as f:
+                json.dump(self.history, f, indent=2)
+            logger.info(f"Saved wellness log: {len(self.history)} total sessions")
+            return "Session saved! Take care, and I'll check in with you next time."
+        except Exception as e:
+            logger.error(f"Failed to save wellness log: {e}")
+            return "I had trouble saving the log, but I'll remember our conversation for now."
+
+    @function_tool
+    async def get_mood_trend(self, context: RunContext, days: int = 7):
+        """Analyze the user's mood trends over recent days.
         
-        # Validate that all required fields are filled
-        if not all([
-            self.order_state["drinkType"],
-            self.order_state["size"],
-            self.order_state["milk"] is not None,  # Can be empty string for "none"
-            self.order_state["name"]
-        ]):
-            missing = []
-            if not self.order_state["drinkType"]:
-                missing.append("drink type")
-            if not self.order_state["size"]:
-                missing.append("size")
-            if self.order_state["milk"] is None:
-                missing.append("milk preference")
-            if not self.order_state["name"]:
-                missing.append("customer name")
+        Use this when the user asks about their mood patterns, like:
+        - "How has my mood been this week?"
+        - "Am I feeling better than last week?"
+        - "What's my mood trend?"
+        
+        Args:
+            days: Number of days to analyze (default: 7 for one week)
+        
+        Returns:
+            A natural language summary of mood trends
+        """
+        analysis = calculate_mood_trend(self.history, days=days)
+        
+        if analysis["recent_sessions"] == 0:
+            return "I don't have enough recent check-ins to analyze your mood trend. Let's do a check-in now to start building that history!"
+        
+        # Build a conversational response
+        response = analysis["trend_summary"]
+        
+        # Add energy context if available
+        if analysis.get("energies"):
+            high_energy_count = sum(1 for e in analysis["energies"] if e in ["high", "energetic", "good"])
+            low_energy_count = sum(1 for e in analysis["energies"] if e in ["low", "tired", "exhausted"])
             
-            return f"Cannot save order yet. Still missing: {', '.join(missing)}"
+            if high_energy_count > len(analysis["energies"]) // 2:
+                response += " Your energy levels have been pretty good too."
+            elif low_energy_count > len(analysis["energies"]) // 2:
+                response += " Your energy has been on the lower side - make sure you're getting enough rest."
         
-        # Create order with timestamp
-        order = {
-            **self.order_state,
-            "timestamp": datetime.now().isoformat(),
-            "status": "pending"
-        }
+        return response
+
+    @function_tool
+    async def get_goal_summary(self, context: RunContext, days: int = 7):
+        """Summarize the user's goal-setting patterns and follow-through.
         
-        # Save to JSON file
-        filename = f"order_{datetime.now().strftime('%Y%m%d_%H%M%S')}_{self.order_state['name']}.json"
-        filepath = ORDERS_DIR / filename
+        Use this when the user asks about their goals, like:
+        - "Am I following through on my goals?"
+        - "How many goals have I been setting?"
+        - "Am I being consistent with my intentions?"
         
-        with open(filepath, 'w') as f:
-            json.dump(order, f, indent=2)
+        Args:
+            days: Number of days to analyze (default: 7 for one week)
         
-        logger.info(f"Order saved: {filepath}")
+        Returns:
+            A natural language summary of goal patterns
+        """
+        analysis = calculate_goal_completion_rate(self.history, days=days)
         
-        # Update display one last time
-        await self._update_display()
+        if analysis["total_goals_set"] == 0:
+            return "You haven't set specific goals in recent check-ins. Would you like to set some today?"
         
-        # Create a nice summary
-        extras_text = ", ".join(self.order_state["extras"]) if self.order_state["extras"] else "none"
-        milk_text = self.order_state["milk"] if self.order_state["milk"] else "no milk"
+        return analysis["summary"]
+
+    @function_tool
+    async def get_weekly_summary(self, context: RunContext):
+        """Generate a comprehensive weekly wellness summary.
         
-        summary = f"""Order confirmed for {self.order_state['name']}!
-{self.order_state['size'].capitalize()} {self.order_state['drinkType']} with {milk_text}.
-Extras: {extras_text}.
-Your order will be ready shortly!"""
+        Use this when the user asks for an overall weekly review, like:
+        - "How has my week been?"
+        - "Can you give me a weekly summary?"
+        - "What are my patterns this week?"
         
+        Returns:
+            A comprehensive natural language summary of the week
+        """
+        summary = generate_weekly_insights(self.history)
         return summary
 
     @function_tool
-    async def update_drink_type(self, context: RunContext, drink_type: str):
-        """Update the drink type in the order.
+    async def create_tasks(
+        self, context: RunContext, goals: list[str], confirmed: bool = False
+    ):
+        """Create tasks in Todoist from the user's goals.
+        
+        IMPORTANT: Only call this if the user explicitly requests task creation AND confirms.
+        First ask: "Would you like me to turn these into Todoist tasks?"
+        Only proceed if they say yes.
         
         Args:
-            drink_type: The type of coffee drink (e.g., latte, cappuccino, americano, espresso, mocha, cold brew)
+            goals: List of goals to convert into tasks
+            confirmed: Must be True (user must confirm before calling)
+        
+        Returns:
+            Status message about task creation
         """
-        self.order_state["drinkType"] = drink_type.lower()
-        logger.info(f"Updated drink type: {drink_type}")
-        await self._update_display()
-        return f"Got it, {drink_type}"
+        if not is_mcp_available():
+            return "Task creation isn't set up yet. To enable it, you'll need to set up Todoist integration with an API token."
+        
+        if not confirmed:
+            return "I need your confirmation before creating tasks. Please confirm you want to create these tasks."
+        
+        result = await create_todoist_tasks(goals)
+        
+        if result["success"]:
+            return f"Great! I've created {result['task_count']} tasks in Todoist for you: {', '.join(goals)}"
+        else:
+            return f"I had trouble creating tasks: {result['message']}"
 
     @function_tool
-    async def update_size(self, context: RunContext, size: str):
-        """Update the size in the order.
+    async def set_reminder(
+        self,
+        context: RunContext,
+        activity: str,
+        time: str,
+        confirmed: bool = False,
+    ):
+        """Create a reminder for a self-care activity or goal.
+        
+        IMPORTANT: Only call this if the user explicitly mentions wanting a reminder AND confirms.
+        First ask: "Would you like me to set a reminder for that?"
+        Only proceed if they say yes.
         
         Args:
-            size: The size of the drink (small, medium, or large)
-        """
-        size_lower = size.lower()
-        if size_lower not in ["small", "medium", "large"]:
-            return "Please choose small, medium, or large"
+            activity: What to be reminded about (e.g., "take a walk", "call mom")
+            time: When to set the reminder (e.g., "6 PM", "3:00 PM", "in 2 hours")
+            confirmed: Must be True (user must confirm before calling)
         
-        self.order_state["size"] = size_lower
-        logger.info(f"Updated size: {size}")
-        await self._update_display()
-        return f"Got it, {size}"
+        Returns:
+            Status message about reminder creation
+        """
+        if not is_mcp_available():
+            return f"Reminder features aren't enabled yet, but I'll note that you wanted to {activity} at {time}. You'll need to set that manually for now."
+        
+        if not confirmed:
+            return f"Just to confirm - you want me to set a reminder to {activity} at {time}?"
+        
+        result = await create_calendar_reminder(activity, time)
+        
+        if result["success"]:
+            return f"Perfect! I've set a reminder for you to {activity} at {time}."
+        else:
+            return result["message"]
 
-    @function_tool
-    async def update_milk(self, context: RunContext, milk: str):
-        """Update the milk preference in the order.
-        
-        Args:
-            milk: The type of milk (whole, skim, oat, almond, soy, or none)
-        """
-        self.order_state["milk"] = milk.lower()
-        logger.info(f"Updated milk: {milk}")
-        await self._update_display()
-        return f"Got it, {milk}"
-
-    @function_tool
-    async def add_extra(self, context: RunContext, extra: str):
-        """Add an extra item to the order.
-        
-        Args:
-            extra: An extra item (e.g., whipped cream, extra shot, vanilla syrup, caramel syrup)
-        """
-        if extra.lower() not in self.order_state["extras"]:
-            self.order_state["extras"].append(extra.lower())
-            logger.info(f"Added extra: {extra}")
-            await self._update_display()
-            return f"Added {extra}"
-        return f"{extra} is already in your order"
-
-    @function_tool
-    async def update_name(self, context: RunContext, name: str):
-        """Update the customer name for the order.
-        
-        Args:
-            name: The customer's name
-        """
-        self.order_state["name"] = name
-        logger.info(f"Updated name: {name}")
-        await self._update_display()
-        return f"Got it, {name}"
 
 
 def prewarm(proc: JobProcess):
@@ -247,50 +330,31 @@ def prewarm(proc: JobProcess):
 
 async def entrypoint(ctx: JobContext):
     # Logging setup
-    # Add any other context you want in all log entries here
     ctx.log_context_fields = {
         "room": ctx.room.name,
     }
 
-    # Set up a voice AI pipeline using OpenAI, Cartesia, AssemblyAI, and the LiveKit turn detector
+    # Set up voice AI pipeline
     session = AgentSession(
-        # Speech-to-text (STT) is your agent's ears, turning the user's speech into text that the LLM can understand
-        # See all available models at https://docs.livekit.io/agents/models/stt/
+        # Speech-to-text (STT)
         stt=deepgram.STT(model="nova-3"),
-        # A Large Language Model (LLM) is your agent's brain, processing user input and generating a response
-        # See all available models at https://docs.livekit.io/agents/models/llm/
-        llm=google.LLM(
-                model="gemini-2.5-flash",
-            ),
-        # Text-to-speech (TTS) is your agent's voice, turning the LLM's text into speech that the user can hear
-        # See all available models as well as voice selections at https://docs.livekit.io/agents/models/tts/
+        # Large Language Model (LLM)
+        llm=google.LLM(model="gemini-2.5-flash"),
+        # Text-to-speech (TTS)
         tts=murf.TTS(
-                voice="en-US-matthew", 
-                style="Conversation",
-                tokenizer=tokenize.basic.SentenceTokenizer(min_sentence_len=2),
-                text_pacing=True
-            ),
-        # VAD and turn detection are used to determine when the user is speaking and when the agent should respond
-        # See more at https://docs.livekit.io/agents/build/turns
+            voice="en-US-matthew",
+            style="Conversation",
+            tokenizer=tokenize.basic.SentenceTokenizer(min_sentence_len=2),
+            text_pacing=True,
+        ),
+        # VAD and turn detection
         turn_detection=MultilingualModel(),
         vad=ctx.proc.userdata["vad"],
-        # allow the LLM to generate a response while waiting for the end of turn
-        # See more at https://docs.livekit.io/agents/build/audio/#preemptive-generation
+        # Allow LLM to generate while waiting for end of turn
         preemptive_generation=True,
     )
 
-    # To use a realtime model instead of a voice pipeline, use the following session setup instead.
-    # (Note: This is for the OpenAI Realtime API. For other providers, see https://docs.livekit.io/agents/models/realtime/))
-    # 1. Install livekit-agents[openai]
-    # 2. Set OPENAI_API_KEY in .env.local
-    # 3. Add `from livekit.plugins import openai` to the top of this file
-    # 4. Use the following session setup instead of the version above
-    # session = AgentSession(
-    #     llm=openai.realtime.RealtimeModel(voice="marin")
-    # )
-
-    # Metrics collection, to measure pipeline performance
-    # For more information, see https://docs.livekit.io/agents/build/metrics/
+    # Metrics collection
     usage_collector = metrics.UsageCollector()
 
     @session.on("metrics_collected")
@@ -304,20 +368,11 @@ async def entrypoint(ctx: JobContext):
 
     ctx.add_shutdown_callback(log_usage)
 
-    # # Add a virtual avatar to the session, if desired
-    # # For other providers, see https://docs.livekit.io/agents/models/avatar/
-    # avatar = hedra.AvatarSession(
-    #   avatar_id="...",  # See https://docs.livekit.io/agents/models/avatar/plugins/hedra
-    # )
-    # # Start the avatar and wait for it to join
-    # await avatar.start(session, room=ctx.room)
-
-    # Start the session, which initializes the voice pipeline and warms up the models
+    # Start the session
     await session.start(
-        agent=Assistant(room=ctx.room),
+        agent=WellnessCompanion(room=ctx.room),
         room=ctx.room,
         room_input_options=RoomInputOptions(
-            # For telephony applications, use `BVCTelephony` for best results
             noise_cancellation=noise_cancellation.BVC(),
         ),
     )

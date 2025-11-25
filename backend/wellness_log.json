@@ -1,0 +1,58 @@
+[
+  {
+    "date": "2025-11-18T10:30:00+05:30",
+    "mood": "tired",
+    "energy": "low",
+    "stressors": ["work deadline", "poor sleep"],
+    "goals": ["finish project report", "get 8 hours sleep", "take a break"],
+    "summary": "User feeling tired due to poor sleep and work pressure"
+  },
+  {
+    "date": "2025-11-19T09:15:00+05:30",
+    "mood": "stressed",
+    "energy": "medium",
+    "stressors": ["work deadline"],
+    "goals": ["review code", "exercise for 30 minutes", "meal prep"],
+    "summary": "Still stressed about work but energy improved slightly"
+  },
+  {
+    "date": "2025-11-20T11:00:00+05:30",
+    "mood": "good",
+    "energy": "medium",
+    "stressors": [],
+    "goals": ["team meeting", "start new feature", "call mom"],
+    "summary": "Mood improved, deadline passed"
+  },
+  {
+    "date": "2025-11-21T10:45:00+05:30",
+    "mood": "great",
+    "energy": "high",
+    "stressors": [],
+    "goals": ["gym session", "read for 1 hour", "organize desk"],
+    "summary": "High energy day, focusing on self-care"
+  },
+  {
+    "date": "2025-11-22T09:30:00+05:30",
+    "mood": "good",
+    "energy": "high",
+    "stressors": [],
+    "goals": ["finish documentation", "walk in park", "cook healthy dinner"],
+    "summary": "Maintaining positive mood and energy"
+  },
+  {
+    "date": "2025-11-23T10:00:00+05:30",
+    "mood": "peaceful",
+    "energy": "medium",
+    "stressors": [],
+    "goals": ["learn new skill", "meditate", "catch up with friend"],
+    "summary": "Weekend relaxation focused on personal growth"
+  },
+  {
+    "date": "2025-11-24T11:30:00+05:30",
+    "mood": "good",
+    "energy": "medium",
+    "stressors": ["upcoming presentation"],
+    "goals": ["prepare presentation", "practice public speaking", "rest well"],
+    "summary": "Slight stress about upcoming presentation but managing well"
+  }
+]

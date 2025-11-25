@@ -18,6 +18,7 @@ We just launched **Murf Falcon** – the consistently fastest TTS API, and you'r
 
 - Day 1: ✅ Get Your Starter Voice Agent Running - COMPLETED
 - Day 2: ✅ Day2 Completed – Coffee Shop Barista Agent ☕🗣️
+- Day 3: ✅ Health & Wellness Voice Companion - COMPLETED 🧘‍♀️💚
 
 ## Repository Structure
 

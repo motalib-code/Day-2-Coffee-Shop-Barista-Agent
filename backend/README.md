@@ -130,6 +130,12 @@ Run the SDR agent:
 uv run python src/day5_agent.py dev
 ```
 
+### Day 6: Fraud Alert Voice Agent
+Run the fraud alert agent:
+```bash
+uv run python src/day6_agent.py dev
+```
+
 ## Frontend & Telephony
 
 Get started quickly with our pre-built frontend starter apps, or add telephony support:

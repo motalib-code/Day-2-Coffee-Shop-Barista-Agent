@@ -1,0 +1,59 @@
+{
+    "company": {
+        "name": "Razorpay",
+        "description": "Razorpay is India's leading full-stack financial solutions company. We help businesses accept payments, make payouts, and manage their finances.",
+        "mission": "To power the financial ecosystem for disruptors."
+    },
+    "products": [
+        {
+            "name": "Payment Gateway",
+            "description": "Accept payments on your website or app with 100+ payment modes including UPI, Cards, Netbanking, and Wallets."
+        },
+        {
+            "name": "Payment Links",
+            "description": "Share payment links via SMS, Email, or WhatsApp and get paid instantly. No website required."
+        },
+        {
+            "name": "RazorpayX",
+            "description": "Supercharge your business banking. Automate payroll, pay vendors, and manage corporate cards."
+        },
+        {
+            "name": "Subscriptions",
+            "description": "Automate recurring payments for your subscription business via UPI Autopay and Cards."
+        }
+    ],
+    "pricing": {
+        "standard": {
+            "fee": "2% per transaction",
+            "details": "For all domestic Debit/Credit cards, Netbanking, UPI, and Wallets. GST applicable extra."
+        },
+        "international": {
+            "fee": "3% per transaction",
+            "details": "For international cards and EMI transactions."
+        },
+        "setup_fee": "Zero setup fee",
+        "maintenance_fee": "Zero annual maintenance fee"
+    },
+    "faqs": [
+        {
+            "question": "How long does it take to activate my account?",
+            "answer": "You can sign up and start accepting payments instantly with our completely online onboarding process. Full activation usually takes 2-3 working days after document submission."
+        },
+        {
+            "question": "Is Razorpay secure?",
+            "answer": "Yes, Razorpay is PCI DSS Level 1 compliant, which is the highest standard of security in the payments industry. We also have an in-house fraud detection system."
+        },
+        {
+            "question": "When will I get my money?",
+            "answer": "Our standard settlement cycle is T+2 days, meaning money will be deposited in your bank account 2 working days after the transaction."
+        },
+        {
+            "question": "Do you support UPI?",
+            "answer": "Yes, we support all major UPI apps including Google Pay, PhonePe, Paytm, and BHIM."
+        },
+        {
+            "question": "Can I use Razorpay without a website?",
+            "answer": "Absolutely! You can use Razorpay Payment Links or Payment Pages to accept payments without writing a single line of code or having a website."
+        }
+    ]
+}

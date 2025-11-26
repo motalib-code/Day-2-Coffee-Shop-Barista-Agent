@@ -124,6 +124,12 @@ Run the tutor agent:
 uv run python src/day4_agent.py dev
 ```
 
+### Day 5: SDR & Lead Capture (Razorpay)
+Run the SDR agent:
+```bash
+uv run python src/day5_agent.py dev
+```
+
 ## Frontend & Telephony
 
 Get started quickly with our pre-built frontend starter apps, or add telephony support:

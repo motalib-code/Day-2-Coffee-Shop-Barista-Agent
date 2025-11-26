@@ -104,6 +104,26 @@ In production, use the `start` command:
 uv run python src/agent.py start
 ```
 
+## Running the Challenge Agents
+
+### Day 2: Coffee Shop Barista
+Run the barista agent:
+```bash
+uv run python src/day2_agent.py dev
+```
+
+### Day 3: Health & Wellness Companion
+Run the wellness companion:
+```bash
+uv run python src/day3_agent.py dev
+```
+
+### Day 4: Active Recall Coach
+Run the tutor agent:
+```bash
+uv run python src/day4_agent.py dev
+```
+
 ## Frontend & Telephony
 
 Get started quickly with our pre-built frontend starter apps, or add telephony support:

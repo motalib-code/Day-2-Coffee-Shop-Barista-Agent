@@ -1,0 +1,62 @@
+[
+    {
+        "id": "variables",
+        "title": "Variables in Programming",
+        "summary": "Variables are named containers that store data values in your program. Think of them like labeled boxes where you can put information and retrieve it later. For example, you might store a user's name in a variable called 'username' or their age in a variable called 'age'. Variables make your code reusable and flexible because you can change the value without rewriting your entire program. In most programming languages, you declare a variable, give it a name, and assign it a value.",
+        "sample_question": "What is a variable and why is it useful in programming?",
+        "difficulty": "beginner",
+        "key_points": [
+            "Variables store data values",
+            "They have names and can be reassigned",
+            "Make code reusable and flexible"
+        ]
+    },
+    {
+        "id": "loops",
+        "title": "Loops (For and While)",
+        "summary": "Loops let you repeat a block of code multiple times without writing it over and over. There are two main types: 'for loops' and 'while loops'. A for loop is best when you know exactly how many times you want to repeat something, like counting from 1 to 10. A while loop runs as long as a condition is true, which is great when you don't know in advance how many times you'll need to loop, like waiting for user input. Loops are essential for processing lists of data, repeating tasks, and building interactive programs.",
+        "sample_question": "Explain the difference between a for loop and a while loop. When would you use each one?",
+        "difficulty": "beginner",
+        "key_points": [
+            "For loops: known number of iterations",
+            "While loops: condition-based iteration",
+            "Essential for repetitive tasks"
+        ]
+    },
+    {
+        "id": "functions",
+        "title": "Functions and Methods",
+        "summary": "Functions are reusable blocks of code that perform specific tasks. Instead of writing the same code multiple times, you write it once in a function and then 'call' that function whenever you need it. Functions can take inputs called 'parameters' and can return outputs. For example, a function called 'calculate_tax' might take a price as input and return the price with tax added. Functions make code more organized, easier to read, and simpler to debug. They're fundamental to writing clean, maintainable code.",
+        "sample_question": "What is a function? Explain how parameters and return values work.",
+        "difficulty": "beginner",
+        "key_points": [
+            "Reusable blocks of code",
+            "Can accept parameters and return values",
+            "Improve code organization and maintainability"
+        ]
+    },
+    {
+        "id": "conditionals",
+        "title": "Conditional Statements (If/Else)",
+        "summary": "Conditionals allow your program to make decisions and execute different code based on whether conditions are true or false. The most common conditional is the 'if statement', which runs code only if a condition is met. You can add 'else' to specify what happens when the condition is false, and 'else if' for multiple conditions. For example, you might check if a user is old enough to vote, or if a password meets security requirements. Conditionals are what make programs smart and responsive to different situations.",
+        "sample_question": "How do if/else statements work? Give an example of when you would use one.",
+        "difficulty": "beginner",
+        "key_points": [
+            "Enable decision-making in code",
+            "Based on true/false conditions",
+            "Use if, else if, and else for multiple paths"
+        ]
+    },
+    {
+        "id": "data_structures",
+        "title": "Data Structures (Lists and Dictionaries)",
+        "summary": "Data structures are ways to organize and store multiple pieces of data efficiently. Lists (or arrays) store ordered collections of items, like a shopping list or a list of student names. You access items by their position (index). Dictionaries (or objects/maps) store key-value pairs, like a phonebook where each name is linked to a phone number. Lists are great for ordered collections, while dictionaries are perfect when you need to look up values by a unique key. Choosing the right data structure makes your code faster and easier to work with.",
+        "sample_question": "What's the difference between a list and a dictionary? When would you use each one?",
+        "difficulty": "intermediate",
+        "key_points": [
+            "Lists: ordered collections with index access",
+            "Dictionaries: key-value pairs for lookups",
+            "Different structures for different use cases"
+        ]
+    }
+]

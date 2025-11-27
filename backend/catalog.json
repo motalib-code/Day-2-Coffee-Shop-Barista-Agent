@@ -1,0 +1,334 @@
+[
+    {
+        "id": "grocery_001",
+        "name": "Whole Wheat Bread",
+        "category": "Groceries",
+        "subcategory": "Bakery",
+        "price": 3.49,
+        "brand": "Nature's Own",
+        "size": "20 oz",
+        "tags": [
+            "vegetarian",
+            "whole-grain"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_002",
+        "name": "White Bread",
+        "category": "Groceries",
+        "subcategory": "Bakery",
+        "price": 2.99,
+        "brand": "Wonder Bread",
+        "size": "20 oz",
+        "tags": [
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_003",
+        "name": "Organic Milk",
+        "category": "Groceries",
+        "subcategory": "Dairy",
+        "price": 5.99,
+        "brand": "Organic Valley",
+        "size": "1 gallon",
+        "tags": [
+            "organic",
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_004",
+        "name": "Large Eggs",
+        "category": "Groceries",
+        "subcategory": "Dairy",
+        "price": 4.29,
+        "brand": "Farm Fresh",
+        "size": "12 count",
+        "tags": [
+            "protein",
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_005",
+        "name": "Peanut Butter",
+        "category": "Groceries",
+        "subcategory": "Spreads",
+        "price": 6.99,
+        "brand": "Jif",
+        "size": "40 oz",
+        "tags": [
+            "vegan",
+            "protein"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_006",
+        "name": "Strawberry Jam",
+        "category": "Groceries",
+        "subcategory": "Spreads",
+        "price": 4.49,
+        "brand": "Smucker's",
+        "size": "18 oz",
+        "tags": [
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_007",
+        "name": "Pasta Spaghetti",
+        "category": "Groceries",
+        "subcategory": "Pasta",
+        "price": 1.99,
+        "brand": "Barilla",
+        "size": "16 oz",
+        "tags": [
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_008",
+        "name": "Marinara Sauce",
+        "category": "Groceries",
+        "subcategory": "Sauces",
+        "price": 3.99,
+        "brand": "Prego",
+        "size": "24 oz",
+        "tags": [
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_009",
+        "name": "Parmesan Cheese",
+        "category": "Groceries",
+        "subcategory": "Dairy",
+        "price": 7.99,
+        "brand": "Kraft",
+        "size": "8 oz",
+        "tags": [
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_010",
+        "name": "Banana",
+        "category": "Groceries",
+        "subcategory": "Fruits",
+        "price": 0.59,
+        "brand": "Fresh Produce",
+        "size": "per lb",
+        "tags": [
+            "vegan",
+            "organic"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_011",
+        "name": "Apple",
+        "category": "Groceries",
+        "subcategory": "Fruits",
+        "price": 1.29,
+        "brand": "Fresh Produce",
+        "size": "per lb",
+        "tags": [
+            "vegan",
+            "organic"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_012",
+        "name": "Orange Juice",
+        "category": "Groceries",
+        "subcategory": "Beverages",
+        "price": 4.99,
+        "brand": "Tropicana",
+        "size": "64 oz",
+        "tags": [
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "snack_001",
+        "name": "Potato Chips",
+        "category": "Snacks",
+        "subcategory": "Chips",
+        "price": 3.99,
+        "brand": "Lay's",
+        "size": "10 oz",
+        "tags": [
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "snack_002",
+        "name": "Tortilla Chips",
+        "category": "Snacks",
+        "subcategory": "Chips",
+        "price": 3.49,
+        "brand": "Tostitos",
+        "size": "13 oz",
+        "tags": [
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "snack_003",
+        "name": "Chocolate Cookies",
+        "category": "Snacks",
+        "subcategory": "Cookies",
+        "price": 4.29,
+        "brand": "Oreo",
+        "size": "14.3 oz",
+        "tags": [
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "snack_004",
+        "name": "Salsa Dip",
+        "category": "Snacks",
+        "subcategory": "Dips",
+        "price": 3.99,
+        "brand": "Pace",
+        "size": "16 oz",
+        "tags": [
+            "vegan",
+            "gluten-free"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "prepared_001",
+        "name": "Margherita Pizza",
+        "category": "Prepared Food",
+        "subcategory": "Pizza",
+        "price": 9.99,
+        "brand": "DiGiorno",
+        "size": "12 inch",
+        "tags": [
+            "vegetarian"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "prepared_002",
+        "name": "Pepperoni Pizza",
+        "category": "Prepared Food",
+        "subcategory": "Pizza",
+        "price": 10.99,
+        "brand": "DiGiorno",
+        "size": "12 inch",
+        "tags": [],
+        "in_stock": true
+    },
+    {
+        "id": "prepared_003",
+        "name": "Turkey Sandwich",
+        "category": "Prepared Food",
+        "subcategory": "Sandwiches",
+        "price": 6.99,
+        "brand": "Fresh Deli",
+        "size": "8 inch",
+        "tags": [],
+        "in_stock": true
+    },
+    {
+        "id": "prepared_004",
+        "name": "Veggie Wrap",
+        "category": "Prepared Food",
+        "subcategory": "Sandwiches",
+        "price": 5.99,
+        "brand": "Fresh Deli",
+        "size": "10 inch",
+        "tags": [
+            "vegetarian",
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_013",
+        "name": "Rice",
+        "category": "Groceries",
+        "subcategory": "Grains",
+        "price": 8.99,
+        "brand": "Uncle Ben's",
+        "size": "5 lb",
+        "tags": [
+            "vegan",
+            "gluten-free"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_014",
+        "name": "Chicken Breast",
+        "category": "Groceries",
+        "subcategory": "Meat",
+        "price": 7.99,
+        "brand": "Perdue",
+        "size": "per lb",
+        "tags": [
+            "protein"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_015",
+        "name": "Olive Oil",
+        "category": "Groceries",
+        "subcategory": "Oils",
+        "price": 12.99,
+        "brand": "Bertolli",
+        "size": "25 oz",
+        "tags": [
+            "vegan"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_016",
+        "name": "Lettuce",
+        "category": "Groceries",
+        "subcategory": "Vegetables",
+        "price": 2.49,
+        "brand": "Fresh Produce",
+        "size": "1 head",
+        "tags": [
+            "vegan",
+            "organic"
+        ],
+        "in_stock": true
+    },
+    {
+        "id": "grocery_017",
+        "name": "Tomatoes",
+        "category": "Groceries",
+        "subcategory": "Vegetables",
+        "price": 2.99,
+        "brand": "Fresh Produce",
+        "size": "per lb",
+        "tags": [
+            "vegan",
+            "organic"
+        ],
+        "in_stock": true
+    }
+]

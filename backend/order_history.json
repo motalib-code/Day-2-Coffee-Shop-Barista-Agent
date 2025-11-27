@@ -1,0 +1,33 @@
+{
+  "orders": [],
+  "recipes": {
+    "peanut butter sandwich": [
+      "grocery_001",
+      "grocery_005"
+    ],
+    "pb&j sandwich": [
+      "grocery_001",
+      "grocery_005",
+      "grocery_006"
+    ],
+    "pasta for two": [
+      "grocery_007",
+      "grocery_008",
+      "grocery_009"
+    ],
+    "pasta": [
+      "grocery_007",
+      "grocery_008"
+    ],
+    "breakfast": [
+      "grocery_002",
+      "grocery_004",
+      "grocery_003"
+    ],
+    "salad": [
+      "grocery_016",
+      "grocery_017",
+      "grocery_015"
+    ]
+  }
+}

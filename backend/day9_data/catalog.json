@@ -1,0 +1,214 @@
+[
+    {
+        "id": "mug_001",
+        "name": "Developer Coffee Mug",
+        "description": "Ceramic mug with 'I turn coffee into code' print.",
+        "price": 399,
+        "currency": "INR",
+        "category": "Mugs",
+        "attributes": {
+            "color": [
+                "white",
+                "black"
+            ]
+        }
+    },
+    {
+        "id": "mug_002",
+        "name": "Python Powered Mug",
+        "description": "Yellow and blue mug with Python logo.",
+        "price": 499,
+        "currency": "INR",
+        "category": "Mugs",
+        "attributes": {
+            "capacity": "350ml"
+        }
+    },
+    {
+        "id": "mug_003",
+        "name": "Debug Mug",
+        "description": "Large mug for long debugging sessions.",
+        "price": 699,
+        "currency": "INR",
+        "category": "Mugs",
+        "attributes": {
+            "color": [
+                "black"
+            ]
+        }
+    },
+    {
+        "id": "tshirt_001",
+        "name": "Git Commit T-Shirt",
+        "description": "100% Cotton t-shirt with git commands.",
+        "price": 799,
+        "currency": "INR",
+        "category": "T-Shirts",
+        "attributes": {
+            "size": [
+                "S",
+                "M",
+                "L",
+                "XL"
+            ],
+            "color": [
+                "grey",
+                "navy"
+            ]
+        }
+    },
+    {
+        "id": "tshirt_002",
+        "name": "React Component T-Shirt",
+        "description": "Blue t-shirt with React atom logo.",
+        "price": 899,
+        "currency": "INR",
+        "category": "T-Shirts",
+        "attributes": {
+            "size": [
+                "S",
+                "M",
+                "L",
+                "XL"
+            ]
+        }
+    },
+    {
+        "id": "tshirt_003",
+        "name": "AI/ML Enthusiast Tee",
+        "description": "Neural network design on black tee.",
+        "price": 999,
+        "currency": "INR",
+        "category": "T-Shirts",
+        "attributes": {
+            "size": [
+                "S",
+                "M",
+                "L",
+                "XL"
+            ]
+        }
+    },
+    {
+        "id": "hoodie_001",
+        "name": "Code Ninja Hoodie",
+        "description": "Premium black hoodie for stealth coding.",
+        "price": 1999,
+        "currency": "INR",
+        "category": "Hoodies",
+        "attributes": {
+            "size": [
+                "S",
+                "M",
+                "L",
+                "XL"
+            ],
+            "color": [
+                "black"
+            ]
+        }
+    },
+    {
+        "id": "hoodie_002",
+        "name": "Open Source Contributor Hoodie",
+        "description": "Green hoodie celebrating open source.",
+        "price": 2199,
+        "currency": "INR",
+        "category": "Hoodies",
+        "attributes": {
+            "size": [
+                "S",
+                "M",
+                "L",
+                "XL"
+            ]
+        }
+    },
+    {
+        "id": "hoodie_003",
+        "name": "Dark Mode Hoodie",
+        "description": "Ultra-soft charcoal hoodie.",
+        "price": 2499,
+        "currency": "INR",
+        "category": "Hoodies",
+        "attributes": {
+            "size": [
+                "S",
+                "M",
+                "L",
+                "XL"
+            ]
+        }
+    },
+    {
+        "id": "sticker_001",
+        "name": "Developer Sticker Pack",
+        "description": "Set of 10 laptop stickers.",
+        "price": 199,
+        "currency": "INR",
+        "category": "Stickers",
+        "attributes": {}
+    },
+    {
+        "id": "sticker_002",
+        "name": "Framework Sticker Pack",
+        "description": "React, Vue, Angular, and Svelte stickers.",
+        "price": 299,
+        "currency": "INR",
+        "category": "Stickers",
+        "attributes": {}
+    },
+    {
+        "id": "cap_001",
+        "name": "Binary Code Cap",
+        "description": "Baseball cap with binary pattern.",
+        "price": 599,
+        "currency": "INR",
+        "category": "Caps",
+        "attributes": {
+            "size": [
+                "Adjustable"
+            ]
+        }
+    },
+    {
+        "id": "cap_002",
+        "name": "AWS Cloud Cap",
+        "description": "Orange and black cap.",
+        "price": 699,
+        "currency": "INR",
+        "category": "Caps",
+        "attributes": {
+            "size": [
+                "Adjustable"
+            ]
+        }
+    },
+    {
+        "id": "acc_001",
+        "name": "RGB Mousepad",
+        "description": "Large gaming mousepad with RGB lighting.",
+        "price": 1299,
+        "currency": "INR",
+        "category": "Accessories",
+        "attributes": {
+            "size": [
+                "XL"
+            ]
+        }
+    },
+    {
+        "id": "acc_002",
+        "name": "Minimal Desk Mat",
+        "description": "Grey felt desk mat.",
+        "price": 499,
+        "currency": "INR",
+        "category": "Accessories",
+        "attributes": {
+            "color": [
+                "dark grey",
+                "light grey"
+            ]
+        }
+    }
+]
